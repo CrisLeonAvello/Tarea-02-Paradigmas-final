@@ -131,7 +131,7 @@ public class VentanaRevisar extends JFrame {
     }
 
     private void volverAlResumen() {
-        new VentanaResumen(prueba); // Volver a la ventana de resumen
+        new VentanaResumen(prueba.obtenerResultados()).setVisible(true); // Volver a la ventana de resumen
         dispose(); // Cierra la ventana de revisión
     }
 

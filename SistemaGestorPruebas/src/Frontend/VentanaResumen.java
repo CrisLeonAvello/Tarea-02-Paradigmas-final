@@ -1,53 +1,56 @@
 package Frontend;
 
-import Backend.Prueba;
 import Backend.ResultadosPrueba;
-
 import javax.swing.*;
 import java.awt.*;
 
 public class VentanaResumen extends JFrame {
+    private final ResultadosPrueba resultados;
 
-    public VentanaResumen(Prueba prueba) {
-        setTitle("Resumen de Resultados");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 300);
-        setLayout(new BorderLayout());
+    public VentanaResumen(ResultadosPrueba resultados) {
+        this.resultados = resultados;
+        inicializarComponentes();
+    }
 
-        // Obtener los resultados de la prueba
-        ResultadosPrueba resultados = prueba.obtenerResultados();
+    private void inicializarComponentes() {
+        setTitle("Resumen de la Prueba");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setSize(400, 400);
+        setLocationRelativeTo(null);
 
-        // Panel para mostrar los datos de resultados
-        JTextArea resultadosArea = new JTextArea();
-        resultadosArea.setEditable(false);
-        resultadosArea.setText("Resultados de la Prueba:\n" +
-                "Total de Preguntas: " + resultados.getTotalPreguntas() +
-                "\nCorrectas: " + resultados.getPreguntasCorrectas());
+        // Panel principal
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        add(new JScrollPane(resultadosArea), BorderLayout.CENTER);
+        // Componentes
+        JLabel lblTotal = new JLabel("Total de preguntas: " + resultados.getTotalPreguntas());
+        JLabel lblCorrectas = new JLabel("Respuestas correctas: " + resultados.getPreguntasCorrectas());
+        JLabel lblIncorrectas = new JLabel("Respuestas incorrectas: " + resultados.getPreguntasIncorrectas());
+        JLabel lblPorcentaje = new JLabel("Porcentaje de acierto: " + resultados.getPorcentajeAciertoFormateado());
+        JLabel lblCalificacion = new JLabel("Calificación: " + resultados.getCalificacionFormateada());
+        
+        JLabel lblEstado = new JLabel("Estado: " + resultados.getEstadoAprobacion());
+        lblEstado.setForeground(Color.decode(resultados.getColorResultado()));
+        lblEstado.setFont(new Font(lblEstado.getFont().getName(), Font.BOLD, 16));
 
-        // Botones inferiores
-        JButton revisarButton = new JButton("Revisar Respuestas");
-        JButton salirButton = new JButton("Salir");
+        // Agregar componentes al panel
+        Component[] componentes = {
+            lblTotal, lblCorrectas, lblIncorrectas, 
+            lblPorcentaje, lblCalificacion, lblEstado
+        };
 
-        // Escucha del botón revisar
-        revisarButton.addActionListener(e -> {
-            // Abrir la ventana de revisión de preguntas
-            new VentanaRevisar(prueba);
-            dispose(); // Cerrar la ventana de resumen actual
-        });
+        for (Component comp : componentes) {
+            comp.setFont(new Font("Arial", Font.PLAIN, 14));
+            panel.add(comp);
+            panel.add(Box.createVerticalStrut(15));
+        }
 
-        // Salir cierra la ventana
-        salirButton.addActionListener(e -> dispose());
+        // Botón para cerrar
+        JButton btnCerrar = new JButton("Cerrar");
+        btnCerrar.addActionListener(e -> dispose());
+        panel.add(btnCerrar);
 
-        // Panel de botones
-        JPanel botonesPanel = new JPanel(new FlowLayout());
-        botonesPanel.add(revisarButton);
-        botonesPanel.add(salirButton);
-
-        add(botonesPanel, BorderLayout.SOUTH);
-
-        setLocationRelativeTo(null); // Centrar en pantalla
-        setVisible(true);
+        add(panel);
     }
 }

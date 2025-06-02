@@ -183,7 +183,7 @@ public class VentanaPrueba extends JFrame {
         );
 
         // Mostrar la ventana de resumen
-        new VentanaResumen(prueba);
+        new VentanaResumen(prueba.obtenerResultados()).setVisible(true);
         dispose(); // Cerrar esta ventana
     }
 
